@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 import sys
+import os
 
-if len(sys.argv) != 5:
-    print("Incorrect usage.\n")
-    print(len(sys.argv))
+if len(sys.argv) != 2:
+    print("Incorrect usage.")
+    print("Correct usage: [input_file]")
     sys.exit()
 
 inputFile = open(sys.argv[1], 'r')
-outputFile = open(sys.argv[2], 'w+')
-course = sys.argv[3]
-date = sys.argv[4]
+outputFile = open((sys.argv[1][:-4] + ".tex"), 'w+')
+cwd = os.getcwd()
+course = cwd[cwd.rfind("/")+1:]
+date = sys.argv[1][-8:-4]
 
 headFile = open('res/head.tex', 'r')
 midFile = open('res/mid.tex', 'r')
