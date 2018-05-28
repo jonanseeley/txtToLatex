@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os
+from subprocess import call
 
 if len(sys.argv) != 2:
     print("Incorrect usage.")
@@ -8,7 +9,8 @@ if len(sys.argv) != 2:
     sys.exit()
 
 inputFile = open(sys.argv[1], 'r')
-outputFile = open((sys.argv[1][:-4] + ".tex"), 'w+')
+outputFilePath = sys.argv[1][:-4] + ".tex"
+outputFile = open(outputFilePath, 'w+')
 cwd = os.getcwd()
 course = cwd[cwd.rfind("/")+1:]
 date = sys.argv[1][-8:-4]
@@ -52,3 +54,4 @@ for line in inputFile:
     indentCount = newIndentCount
 
 outputFile.write("\\end{document}")
+#call(["pdflatex", outputFilePath])
