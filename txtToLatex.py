@@ -1,32 +1,34 @@
 #!/usr/bin/env python
 import sys
 import os
+import argparse
 from subprocess import call
 
-if len(sys.argv) != 2:
-    print("Incorrect usage.")
-    print("Correct usage: [input_file]")
-    sys.exit()
+# Setting up argument parser
+parser = argparse.ArgumentParser()
+parser.add_argument("file", help="Filename for .txt file", type=str)
+parser.add_argument("name", help="Your name", type=str)
+parser.add_argument("course", help="Name of course", type=str)
+parser.add_argument("title", help="Title of notes", type=str)
+args = parser.parse_args()
 
-inputFile = open(sys.argv[1], 'r')
-outputFilePath = sys.argv[1][:-4] + ".tex"
+# Initialize output file
+inputFile = open(args.file, 'r')
+outputFilePath = args.file[:-4] + ".tex"
 outputFile = open(outputFilePath, 'w+')
-cwd = os.getcwd()
-course = cwd[cwd.rfind("/")+1:]
-date = sys.argv[1][-8:-4]
 
+# Open reference files
 headFile = open('res/head.tex', 'r')
 midFile = open('res/mid.tex', 'r')
 
+# Write commands to file to be used in header
 outputFile.write(headFile.read())
-outputFile.write("\\newcommand{\\mydate}{" + date + "}\n")
-
-course = course[:2] + "-" + course[2:]
-
-outputFile.write("\\newcommand{\\mycourse}{" + course + "}\n")
-
+outputFile.write("\\newcommand{\\myname}{" + args.name + "}\n")
+outputFile.write("\\newcommand{\\mytitle}{" + args.title + "}\n")
+outputFile.write("\\newcommand{\\mycourse}{" + args.course + "}\n")
 outputFile.write(midFile.read())
 
+# Loop to process tabs into indents in a itemized list
 indentCount = 0
 for line in inputFile:
     line = line.replace("<", "\\textless")
@@ -54,4 +56,3 @@ for line in inputFile:
     indentCount = newIndentCount
 
 outputFile.write("\\end{document}")
-#call(["pdflatex", outputFilePath])
